@@ -979,13 +979,13 @@
                             t += '    • ' + formatearMonto(r.monto) + (r.descripcion ? ' - ' + r.descripcion : '') + '\n';
                         });
                     });
-                    //t += '─'.repeat(ancho) + '\n';
-                    //t += padRight('  TOTAL FINAL', 28) + padLeft(formatearMonto(datosInforme.entregas.totalFinal), 20) + '\n';
-                    //t += '\n';
+                    t += '.'.repeat(ancho) + '\n';
+                    t += padRight('  TOTAL ENTREGA FINAL', 28) + padLeft(formatearMonto(datosInforme.entregas.totalFinal), 20) + '\n';
+                    t += '\n';
                 }
                 
-                t += '.'.repeat(ancho) + '\n';
-                t += padRight('  TOTAL ENTREGAS', 28) + padLeft(formatearMonto(datosInforme.entregas.totalEntregas), 20) + '\n';
+                //t += '.'.repeat(ancho) + '\n';
+                //t += padRight('  TOTAL ENTREGAS', 28) + padLeft(formatearMonto(datosInforme.entregas.totalEntregas), 20) + '\n';
                 t += '_'.repeat(ancho) + '\n\n';
             }
 
