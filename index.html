@@ -825,7 +825,8 @@
             var r = datosInforme.recaudo;
             
             // ========== ENCABEZADO ==========
-            t += centerText('INFORME DE CAJA MENOR - SICSa', ancho);
+            t += '_'.repeat(ancho) + '\n';
+            t += centerText('INFORME DE CAJA MENOR (SICSa)', ancho);
             t += centerText('FECHA: ' + datosInforme.fecha, ancho) + '\n';
             t += '_'.repeat(ancho) + '\n';
             
@@ -856,7 +857,7 @@
             if (tienePereira || tieneSupia || tieneManizales) {
                 t += centerText('🏙️ RECAUDO POR RUTA', ancho) + '\n';
                 t += '\n';
-                t += padRight('CIUDAD', 11) + padRight('CAJA (ABC)', 12) + padRight('CARTERA (ARC)', 15) + 'TOTAL\n';
+                t += padRight('RUTA', 11) + padRight('CAJA (ABC)', 12) + padRight('CARTERA (ARC)', 15) + 'TOTAL\n';
                 t += '.'.repeat(ancho) + '\n';
                 
                 if (tienePereira) {
