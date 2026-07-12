@@ -857,7 +857,7 @@
             var tieneManizales = r.abcManizales > 0 || r.arcManizales > 0;
             
             if (tienePereira || tieneSupia || tieneManizales) {
-                t += centerText('🏙️ DESGLOSE POR CIUDAD', ancho) + '\n';
+                t += centerText('🏙️ DESGLOSE POR RUTA', ancho) + '\n';
                 t += padRight('CIUDAD', 12) + padRight('ABC', 12) + padRight('ARC', 12) + 'TOTAL\n';
                 t += '.'.repeat(ancho) + '\n';
                 
@@ -944,13 +944,13 @@
             }
             t += '.'.repeat(ancho) + '\n';
             t += padRight('  TOTAL EGRESOS', 28) + padLeft(formatearMonto(datosInforme.totalEgresos), 20) + '\n';
-            t += '_'.repeat(ancho) + '\n\n';
+            t += '_'.repeat(ancho) + '\n';
             
             // ========== TOTAL GENERAL ==========
-            t += centerText('🏦 TOTAL GENERAL', ancho) + '\n';
+            t += centerText('🏦 TOTAL GENERAL', ancho) + '\n\n';
             // ========== 🔥 NUEVO: ENTREGAS ==========
             if (datosInforme.entregas.totalEntregas > 0) {
-                t += centerText('📦 ENTREGAS', ancho) + '\n';
+                //t += centerText('📦 ENTREGAS', ancho) + '\n';
                 //t += '_'.repeat(ancho) + '\n';
                 
                 // ENTREGA PARCIAL
