@@ -1,0 +1,1221 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+    <title>SICSa - Informe Diario de Caja</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Courier New', monospace;
+            background: #e8ecf1;
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 16px;
+        }
+        
+        .paper {
+            max-width: 520px;
+            width: 100%;
+            background: white;
+            border-radius: 24px;
+            box-shadow: 0 8px 24px rgba(0,0,0,0.12);
+            overflow: hidden;
+            animation: fadeIn 0.3s ease;
+        }
+        
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        
+        .header {
+            background: linear-gradient(135deg, #1a472a 0%, #0e2a1a 100%);
+            color: white;
+            padding: 20px;
+            text-align: center;
+        }
+        
+        .header h1 {
+            font-size: 20px;
+            margin-bottom: 4px;
+            letter-spacing: 1px;
+        }
+        
+        .header p {
+            font-size: 12px;
+            opacity: 0.9;
+        }
+        
+        .header .fecha {
+            font-size: 14px;
+            margin-top: 8px;
+            opacity: 0.85;
+            font-weight: bold;
+        }
+        
+        .content {
+            padding: 20px;
+        }
+        
+        .info-card {
+            background: #f0fdf4;
+            border-left: 4px solid #1a472a;
+            padding: 12px 16px;
+            border-radius: 12px;
+            margin-bottom: 20px;
+            font-size: 13px;
+        }
+        
+        .info-card p {
+            margin: 3px 0;
+        }
+        
+        /* ========== TABLA DE DESGLOSE POR CIUDAD ========== */
+        .tabla-desglose {
+            width: 100%;
+            margin-top: 6px;
+            border-collapse: collapse;
+            font-size: 11px;
+        }
+        
+        .tabla-desglose th {
+            background: #e2e8f0;
+            color: #1e293b;
+            padding: 4px 8px;
+            text-align: center;
+            font-weight: 700;
+            font-size: 10px;
+            text-transform: uppercase;
+        }
+        
+        .tabla-desglose td {
+            padding: 3px 8px;
+            border-bottom: 1px solid #f1f5f9;
+            text-align: center;
+        }
+        
+        .tabla-desglose .total-row td {
+            font-weight: 700;
+            border-top: 2px solid #1a472a;
+            padding-top: 6px;
+        }
+        
+        .tabla-desglose .ciudad-nombre {
+            font-weight: 600;
+            text-align: left;
+        }
+        
+        .tabla-desglose .monto-abc {
+            color: #1a472a;
+        }
+        
+        .tabla-desglose .monto-arc {
+            color: #0c4a6e;
+        }
+        
+        .tabla-desglose .monto-total {
+            font-weight: 700;
+            color: #1a472a;
+        }
+        
+        .badge-abc {
+            display: inline-block;
+            background: #1a472a;
+            color: white;
+            font-size: 8px;
+            padding: 1px 6px;
+            border-radius: 6px;
+            font-weight: 600;
+        }
+        
+        .badge-arc {
+            display: inline-block;
+            background: #0c4a6e;
+            color: white;
+            font-size: 8px;
+            padding: 1px 6px;
+            border-radius: 6px;
+            font-weight: 600;
+        }
+        
+        .ticket-preview {
+            background: #f8fafc;
+            border: 1px solid #e2e8f0;
+            border-radius: 12px;
+            padding: 16px;
+            margin-bottom: 20px;
+            font-family: 'Courier New', monospace;
+            font-size: 11px;
+            line-height: 1.5;
+            white-space: pre-wrap;
+            word-break: break-all;
+            max-height: 550px;
+            overflow: auto;
+        }
+        
+        .ticket-preview::-webkit-scrollbar {
+            width: 6px;
+        }
+        
+        .ticket-preview::-webkit-scrollbar-track {
+            background: #e2e8f0;
+            border-radius: 10px;
+        }
+        
+        .ticket-preview::-webkit-scrollbar-thumb {
+            background: #1a472a;
+            border-radius: 10px;
+        }
+        
+        button {
+            width: 100%;
+            padding: 14px;
+            border: none;
+            border-radius: 12px;
+            font-size: 16px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            margin-bottom: 10px;
+        }
+        
+        button:active {
+            transform: scale(0.97);
+        }
+        
+        .btn-primary {
+            background: #1a472a;
+            color: white;
+            box-shadow: 0 2px 8px rgba(26,71,42,0.3);
+        }
+        
+        .btn-primary:hover {
+            background: #0e2a1a;
+        }
+        
+        .btn-secondary {
+            background: #64748b;
+            color: white;
+        }
+        
+        .btn-secondary:hover {
+            background: #475569;
+        }
+        
+        .btn-danger {
+            background: #ef4444;
+            color: white;
+        }
+        
+        .btn-danger:hover {
+            background: #dc2626;
+        }
+        
+        .btn-warning {
+            background: #f59e0b;
+            color: white;
+        }
+        
+        .flex-buttons {
+            display: flex;
+            gap: 12px;
+            margin-bottom: 12px;
+        }
+        
+        .flex-buttons button {
+            flex: 1;
+            margin-bottom: 0;
+        }
+        
+        .status {
+            padding: 12px;
+            border-radius: 12px;
+            font-size: 12px;
+            text-align: center;
+            margin-top: 12px;
+        }
+        
+        .status-info {
+            background: #dbeafe;
+            color: #1e40af;
+        }
+        
+        .status-success {
+            background: #dcfce7;
+            color: #166534;
+        }
+        
+        .status-error {
+            background: #fee2e2;
+            color: #991b1b;
+        }
+        
+        .status-warning {
+            background: #fed7aa;
+            color: #9a3412;
+        }
+        
+        hr {
+            margin: 16px 0;
+            border: none;
+            border-top: 1px solid #e2e8f0;
+        }
+        
+        .footer {
+            text-align: center;
+            font-size: 10px;
+            color: #94a3b8;
+            padding: 16px 20px;
+            background: #f8fafc;
+        }
+        
+        .badge-tipo {
+            display: inline-block;
+            padding: 2px 10px;
+            border-radius: 10px;
+            font-size: 10px;
+            font-weight: 700;
+            color: white;
+        }
+        
+        .badge-venta {
+            background: #1a472a;
+        }
+        
+        .badge-recaudo {
+            background: #0d6efd;
+        }
+        
+        .badge-egreso {
+            background: #dc3545;
+        }
+        
+        .badge-total {
+            background: #6f42c1;
+        }
+        
+        .badge-estadistica {
+            background: #8b5cf6;
+        }
+        
+        /* ========== NUEVO: ESTILOS PARA ENTREGAS ========== */
+        .badge-parcial {
+            background: #0d6efd;
+        }
+        
+        .badge-final {
+            background: #dc3545;
+        }
+        
+        .entregas-item {
+            display: flex;
+            justify-content: space-between;
+            padding: 4px 0;
+            border-bottom: 1px solid #f1f5f9;
+            font-size: 12px;
+        }
+        
+        .entregas-item .nombre {
+            font-weight: 500;
+        }
+        
+        .entregas-item .monto {
+            font-weight: 600;
+        }
+        
+        .entregas-item .monto.parcial {
+            color: #0d6efd;
+        }
+        
+        .entregas-item .monto.final {
+            color: #dc3545;
+        }
+        
+        .entregas-item .detalle {
+            font-size: 10px;
+            color: #64748b;
+        }
+        
+        .entregas-total {
+            display: flex;
+            justify-content: space-between;
+            padding: 6px 0 0 0;
+            border-top: 2px solid #6f42c1;
+            font-weight: 700;
+            font-size: 13px;
+            margin-top: 4px;
+        }
+        
+        .resumen-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 6px 12px;
+            font-size: 12px;
+        }
+        
+        .resumen-grid .label {
+            color: #64748b;
+        }
+        
+        .resumen-grid .value {
+            font-weight: 600;
+            text-align: right;
+        }
+        
+        .resumen-grid .value.venta {
+            color: #1a472a;
+        }
+        
+        .resumen-grid .value.recaudo {
+            color: #0d6efd;
+        }
+        
+        .resumen-grid .value.egreso {
+            color: #dc3545;
+        }
+        
+        .resumen-grid .value.total {
+            color: #6f42c1;
+            font-size: 14px;
+        }
+        
+        .resumen-grid .value.estadistica {
+            color: #8b5cf6;
+        }
+        
+        .resumen-grid .value.entrega {
+            color: #f59e0b;
+        }
+        
+        /* ========== RESPONSIVE ========== */
+        @media (max-width: 480px) {
+            body {
+                padding: 8px;
+            }
+            
+            .paper {
+                border-radius: 16px;
+            }
+            
+            .header h1 {
+                font-size: 17px;
+            }
+            
+            .content {
+                padding: 14px;
+            }
+            
+            .ticket-preview {
+                font-size: 10px;
+                max-height: 400px;
+                padding: 12px;
+            }
+            
+            button {
+                font-size: 14px;
+                padding: 12px;
+            }
+            
+            .flex-buttons button {
+                font-size: 12px;
+                padding: 10px;
+            }
+            
+            .tabla-desglose {
+                font-size: 10px;
+            }
+            
+            .tabla-desglose th,
+            .tabla-desglose td {
+                padding: 2px 4px;
+            }
+            
+            .entregas-item {
+                font-size: 11px;
+            }
+        }
+        
+        @media (max-width: 360px) {
+            .ticket-preview {
+                font-size: 9px;
+                max-height: 350px;
+                padding: 10px;
+            }
+            
+            .tabla-desglose {
+                font-size: 9px;
+            }
+            
+            .header h1 {
+                font-size: 15px;
+            }
+        }
+        
+        /* ========== IMPRESIÓN ========== */
+        @media print {
+            body {
+                background: white;
+                padding: 0;
+            }
+            
+            .paper {
+                border-radius: 0;
+                box-shadow: none;
+                max-width: 100%;
+            }
+            
+            .btn-primary,
+            .btn-secondary,
+            .btn-danger,
+            .btn-warning,
+            .flex-buttons,
+            .status {
+                display: none !important;
+            }
+            
+            .footer {
+                display: none !important;
+            }
+            
+            .header {
+                background: #1a472a !important;
+                -webkit-print-color-adjust: exact;
+                print-color-adjust: exact;
+            }
+            
+            .info-card {
+                background: #f0fdf4 !important;
+                -webkit-print-color-adjust: exact;
+                print-color-adjust: exact;
+            }
+            
+            .tabla-desglose th {
+                background: #e2e8f0 !important;
+                -webkit-print-color-adjust: exact;
+                print-color-adjust: exact;
+            }
+            
+            .ticket-preview {
+                max-height: none !important;
+                overflow: visible !important;
+                border: none !important;
+                padding: 0 !important;
+                background: white !important;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="paper">
+        <div class="header">
+            <h1>🏦 SICSa</h1>
+            <p>Informe Diario de Caja Menor</p>
+            <div class="fecha" id="fechaHeader">📅 Cargando fecha...</div>
+        </div>
+        
+        <div class="content">
+            <div id="infoResumen" class="info-card">
+                <p>📄 Cargando información del día...</p>
+            </div>
+            
+            <div id="ticketPreview" class="ticket-preview">
+                ⏳ Generando informe diario...
+            </div>
+            
+            <button id="btnImprimir" class="btn-primary">🖨️ IMPRIMIR INFORME</button>
+            
+            <div class="flex-buttons">
+                <button id="btnCopiar" class="btn-secondary">📋 COPIAR</button>
+                <button id="btnCerrar" class="btn-danger">❌ CERRAR</button>
+            </div>
+            
+            <div id="status" class="status status-info">
+                ⚪ Listo para imprimir
+            </div>
+        </div>
+        
+        <div class="footer">
+            Conecta tu impresora en RawBT | PIN: 0000
+        </div>
+    </div>
+
+    <script>
+        // ============================================================
+        // FUNCIÓN PARA OBTENER PARÁMETROS DE URL (SIN URLSearchParams)
+        // ============================================================
+        function getUrlParams() {
+            var params = {};
+            var query = window.location.search.substring(1);
+            if (query) {
+                var pairs = query.split('&');
+                for (var i = 0; i < pairs.length; i++) {
+                    var pair = pairs[i].split('=');
+                    var key = decodeURIComponent(pair[0]);
+                    var value = decodeURIComponent(pair[1] || '');
+                    params[key] = value;
+                }
+            }
+            return params;
+        }
+        
+        // ============================================================
+        // VARIABLES GLOBALES
+        // ============================================================
+        var ticketTexto = '';
+        var datosInforme = null;
+        
+        // ============================================================
+        // LEER DATOS DE LA URL (CON NUEVOS PARÁMETROS DE CIUDAD Y ENTREGAS)
+        // ============================================================
+        function leerDatosURL() {
+            var urlParams = getUrlParams();
+            
+            // Parsear egresos
+            var egresosRaw = urlParams['egresos'] || '[]';
+            var egresos = [];
+            try {
+                egresos = JSON.parse(egresosRaw);
+                console.log('📋 Egresos parseados:', egresos);
+            } catch (e) {
+                console.error('Error al parsear egresos:', e);
+                egresos = [];
+            }
+            
+            // 🔥 NUEVO: Parsear entregas
+            var entregasParcialRaw = urlParams['entregas_parcial'] || '[]';
+            var entregasFinalRaw = urlParams['entregas_final'] || '[]';
+            var entregasParcial = [];
+            var entregasFinal = [];
+            try {
+                entregasParcial = JSON.parse(entregasParcialRaw);
+                entregasFinal = JSON.parse(entregasFinalRaw);
+                console.log('📋 Entregas parciales:', entregasParcial);
+                console.log('📋 Entregas finales:', entregasFinal);
+            } catch (e) {
+                console.error('Error al parsear entregas:', e);
+                entregasParcial = [];
+                entregasFinal = [];
+            }
+            
+            // ========== ESTRUCTURA COMPLETA DE DATOS ==========
+            datosInforme = {
+                fecha: urlParams['fecha'] || new Date().toLocaleDateString(),
+                
+                // ===== VENTAS =====
+                ventas: {
+                    facturacion: parseFloat(urlParams['venta_facturacion']) || 0,
+                    ventas: parseFloat(urlParams['venta_ventas']) || 0,
+                    pereira: parseFloat(urlParams['venta_pereira']) || 0,
+                    manizales: parseFloat(urlParams['venta_manizales']) || 0,
+                    supia: parseFloat(urlParams['venta_supia']) || 0,
+                    total: parseFloat(urlParams['venta_total']) || 0
+                },
+                
+                // ===== RECAUDO (CON DESGLOSE POR CIUDAD) =====
+                recaudo: {
+                    abc: parseFloat(urlParams['recaudo_abc']) || 0,
+                    arc: parseFloat(urlParams['recaudo_arc']) || 0,
+                    total: parseFloat(urlParams['recaudo_total']) || 0,
+                    registrosABC: parseInt(urlParams['recaudo_registros_abc']) || 0,
+                    registrosARC: parseInt(urlParams['recaudo_registros_arc']) || 0,
+                    
+                    abcPereira: parseFloat(urlParams['recaudo_abc_pereira']) || 0,
+                    arcPereira: parseFloat(urlParams['recaudo_arc_pereira']) || 0,
+                    abcSupia: parseFloat(urlParams['recaudo_abc_supia']) || 0,
+                    arcSupia: parseFloat(urlParams['recaudo_arc_supia']) || 0,
+                    abcManizales: parseFloat(urlParams['recaudo_abc_manizales']) || 0,
+                    arcManizales: parseFloat(urlParams['recaudo_arc_manizales']) || 0
+                },
+                
+                // ===== EGRESOS =====
+                egresos: egresos,
+                totalEgresos: parseFloat(urlParams['total_egresos']) || 0,
+                
+                // ===== 🔥 NUEVO: ENTREGAS =====
+                entregas: {
+                    parcial: entregasParcial,
+                    final: entregasFinal,
+                    totalParcial: parseFloat(urlParams['total_entregas_parcial']) || 0,
+                    totalFinal: parseFloat(urlParams['total_entregas_final']) || 0,
+                    totalEntregas: parseFloat(urlParams['total_entregas']) || 0
+                },
+                
+                // ===== ESTADÍSTICAS =====
+                estadisticas: {
+                    clientesAtendidos: parseInt(urlParams['est_clientes_atendidos']) || 0,
+                    promedioCobro: parseFloat(urlParams['est_promedio_cobro']) || 0,
+                    totalCobros: parseInt(urlParams['est_total_cobros']) || 0,
+                    totalMonto: parseFloat(urlParams['est_total_monto']) || 0
+                },
+                
+                // ===== TOTALES =====
+                totalIngresos: parseFloat(urlParams['total_ingresos']) || 0
+            };
+            
+            // Calcular totales por ciudad
+            datosInforme.recaudo.totalPereira = datosInforme.recaudo.abcPereira + datosInforme.recaudo.arcPereira;
+            datosInforme.recaudo.totalSupia = datosInforme.recaudo.abcSupia + datosInforme.recaudo.arcSupia;
+            datosInforme.recaudo.totalManizales = datosInforme.recaudo.abcManizales + datosInforme.recaudo.arcManizales;
+            
+            // Actualizar fecha en el header
+            document.getElementById('fechaHeader').textContent = '📅 ' + datosInforme.fecha;
+            
+            mostrarResumen();
+            ticketTexto = generarTicketInforme();
+            document.getElementById('ticketPreview').innerText = ticketTexto;
+            
+            return datosInforme.fecha !== null;
+        }
+        
+        // ============================================================
+        // MOSTRAR RESUMEN DEL INFORME (CON ENTREGAS)
+        // ============================================================
+        function mostrarResumen() {
+            var container = document.getElementById('infoResumen');
+            
+            var ventaTotal = formatearMonto(datosInforme.ventas.total);
+            var recaudoTotal = formatearMonto(datosInforme.recaudo.total);
+            var egresoTotal = formatearMonto(datosInforme.totalEgresos);
+            var totalEntregas = formatearMonto(datosInforme.entregas.totalEntregas);
+            var totalGeneral = formatearMonto(datosInforme.totalIngresos);
+            var facturacion = formatearMonto(datosInforme.ventas.facturacion);
+            var promedio = formatearMonto(datosInforme.estadisticas.promedioCobro);
+            
+            // ===== VERIFICAR SI HAY DESGLOSE POR CIUDAD =====
+            var tienePereira = datosInforme.recaudo.abcPereira > 0 || datosInforme.recaudo.arcPereira > 0;
+            var tieneSupia = datosInforme.recaudo.abcSupia > 0 || datosInforme.recaudo.arcSupia > 0;
+            var tieneManizales = datosInforme.recaudo.abcManizales > 0 || datosInforme.recaudo.arcManizales > 0;
+            var tieneDesglose = tienePereira || tieneSupia || tieneManizales;
+            
+            // ===== VERIFICAR SI HAY ENTREGAS =====
+            var tieneEntregas = datosInforme.entregas.totalEntregas > 0;
+            
+            // ===== CONSTRUIR HTML DEL RESUMEN =====
+            var html = '';
+            
+            // FILA 1: Ventas y Recaudo
+            html += `
+                <div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:6px;">
+                    <span><strong>📊 VENTAS:</strong> <span style="color:#1a472a;">${ventaTotal}</span></span>
+                    <span><strong>💰 RECAUDO:</strong> <span style="color:#0d6efd;">${recaudoTotal}</span></span>
+                </div>
+                
+                <!-- FILA 2: Egresos y Total -->
+                <div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:6px; margin-top:4px;">
+                    <span><strong>💸 EGRESOS:</strong> <span style="color:#dc3545;">${egresoTotal}</span></span>
+                    <span><strong>🏦 TOTAL:</strong> <span style="color:#6f42c1; font-weight:bold;">${totalGeneral}</span></span>
+                </div>
+            `;
+            
+            // 🔥 NUEVO: FILA DE ENTREGAS (justo arriba de facturación y cobros)
+            if (tieneEntregas) {
+                html += `
+                    <div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:6px; margin-top:4px; padding:4px 8px; background:#fefce8; border-radius:8px; border:1px solid #fde68a;">
+                        <span><strong>📦 ENTREGAS:</strong> <span style="color:#f59e0b; font-weight:bold;">${totalEntregas}</span></span>
+                        <span style="font-size:11px; color:#64748b;">
+                            ${datosInforme.entregas.parcial.length > 0 ? `📄 EP: ${formatearMonto(datosInforme.entregas.totalParcial)}` : ''}
+                            ${datosInforme.entregas.parcial.length > 0 && datosInforme.entregas.final.length > 0 ? ' | ' : ''}
+                            ${datosInforme.entregas.final.length > 0 ? `📄 EF: ${formatearMonto(datosInforme.entregas.totalFinal)}` : ''}
+                        </span>
+                    </div>
+                `;
+            }
+            
+            // FILA 3: Facturación y Cobros
+            html += `
+                <div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:6px; margin-top:4px;">
+                    <span><strong>📄 FACTURACIÓN:</strong> <span style="color:#1a472a;">${facturacion}</span></span>
+                    <span><strong>📝 COBROS:</strong> <span style="color:#8b5cf6;">${datosInforme.estadisticas.totalCobros || 0}</span></span>
+                </div>
+                
+                <!-- FILA 4: Estadísticas -->
+                <div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:6px; margin-top:4px; padding-top:6px; border-top:1px solid #e2e8f0;">
+                    <span><strong>👥 CLIENTES:</strong> <span style="color:#8b5cf6;">${datosInforme.estadisticas.clientesAtendidos || 0}</span></span>
+                    <span><strong>📊 PROMEDIO:</strong> <span style="color:#8b5cf6;">${promedio}</span></span>
+                    <span><strong>📋 REGISTROS:</strong> <span style="color:#8b5cf6;">${datosInforme.recaudo.registrosABC + datosInforme.recaudo.registrosARC}</span></span>
+                </div>
+            `;
+            
+            // ===== DESGLOSE POR CIUDAD =====
+            if (tieneDesglose) {
+                html += `
+                    <div style="margin-top:8px; padding-top:6px; border-top:1px solid #e2e8f0;">
+                        <div style="font-size:11px; font-weight:700; color:#1e293b; margin-bottom:4px;">🏙️ DESGLOSE POR CIUDAD</div>
+                        <table class="tabla-desglose">
+                            <thead>
+                                <tr>
+                                    <th style="text-align:left;">CIUDAD</th>
+                                    <th><span class="badge-abc">ABC</span></th>
+                                    <th><span class="badge-arc">ARC</span></th>
+                                    <th>TOTAL</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                `;
+                
+                if (tienePereira) {
+                    html += `
+                        <tr>
+                            <td class="ciudad-nombre">PEREIRA</td>
+                            <td class="monto-abc">${formatearMonto(datosInforme.recaudo.abcPereira)}</td>
+                            <td class="monto-arc">${formatearMonto(datosInforme.recaudo.arcPereira)}</td>
+                            <td class="monto-total">${formatearMonto(datosInforme.recaudo.totalPereira)}</td>
+                        </tr>
+                    `;
+                }
+                if (tieneSupia) {
+                    html += `
+                        <tr>
+                            <td class="ciudad-nombre">SUPIA</td>
+                            <td class="monto-abc">${formatearMonto(datosInforme.recaudo.abcSupia)}</td>
+                            <td class="monto-arc">${formatearMonto(datosInforme.recaudo.arcSupia)}</td>
+                            <td class="monto-total">${formatearMonto(datosInforme.recaudo.totalSupia)}</td>
+                        </tr>
+                    `;
+                }
+                if (tieneManizales) {
+                    html += `
+                        <tr>
+                            <td class="ciudad-nombre">MANIZALES</td>
+                            <td class="monto-abc">${formatearMonto(datosInforme.recaudo.abcManizales)}</td>
+                            <td class="monto-arc">${formatearMonto(datosInforme.recaudo.arcManizales)}</td>
+                            <td class="monto-total">${formatearMonto(datosInforme.recaudo.totalManizales)}</td>
+                        </tr>
+                    `;
+                }
+                
+                html += `
+                            <tr class="total-row">
+                                <td><strong>TOTAL</strong></td>
+                                <td><strong>${formatearMonto(datosInforme.recaudo.abc)}</strong></td>
+                                <td><strong>${formatearMonto(datosInforme.recaudo.arc)}</strong></td>
+                                <td><strong>${formatearMonto(datosInforme.recaudo.total)}</strong></td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+                `;
+            }
+            
+            // ===== 🔥 NUEVO: DETALLE DE ENTREGAS =====
+            if (tieneEntregas) {
+                html += `
+                    <div style="margin-top:8px; padding-top:6px; border-top:1px solid #e2e8f0;">
+                        <div style="font-size:11px; font-weight:700; color:#1e293b; margin-bottom:4px;">📦 DETALLE DE ENTREGAS</div>
+                `;
+                
+                // ENTREGA PARCIAL
+                if (datosInforme.entregas.parcial.length > 0) {
+                    html += `
+                        <div style="font-size:11px; font-weight:600; color:#0d6efd; margin:4px 0 2px 0;">📄 ENTREGA PARCIAL (EP)</div>
+                    `;
+                    datosInforme.entregas.parcial.forEach(function(item) {
+                        html += `
+                            <div class="entregas-item">
+                                <div>
+                                    <span class="nombre">${escapeHtml(item.nombre)}</span>
+                                    <div class="detalle">
+                                        ${item.registros.map(function(r) {
+                                            return '💰 ' + formatearMonto(r.monto) + (r.descripcion ? ' - ' + escapeHtml(r.descripcion) : '');
+                                        }).join(' | ')}
+                                    </div>
+                                </div>
+                                <span class="monto parcial">${formatearMonto(item.monto)}</span>
+                            </div>
+                        `;
+                    });
+                    html += `
+                        <div style="display:flex; justify-content:space-between; font-size:11px; font-weight:600; color:#0d6efd; padding:2px 0; border-top:1px dashed #93c5fd;">
+                            <span>TOTAL ENTREGA PARCIAL</span>
+                            <span>${formatearMonto(datosInforme.entregas.totalParcial)}</span>
+                        </div>
+                    `;
+                }
+                
+                // ENTREGA FINAL
+                if (datosInforme.entregas.final.length > 0) {
+                    html += `
+                        <div style="font-size:11px; font-weight:600; color:#dc3545; margin:6px 0 2px 0;">📄 ENTREGA FINAL (EF)</div>
+                    `;
+                    datosInforme.entregas.final.forEach(function(item) {
+                        html += `
+                            <div class="entregas-item">
+                                <div>
+                                    <span class="nombre">${escapeHtml(item.nombre)}</span>
+                                    <div class="detalle">
+                                        ${item.registros.map(function(r) {
+                                            return '💰 ' + formatearMonto(r.monto) + (r.descripcion ? ' - ' + escapeHtml(r.descripcion) : '');
+                                        }).join(' | ')}
+                                    </div>
+                                </div>
+                                <span class="monto final">${formatearMonto(item.monto)}</span>
+                            </div>
+                        `;
+                    });
+                    html += `
+                        <div style="display:flex; justify-content:space-between; font-size:11px; font-weight:600; color:#dc3545; padding:2px 0; border-top:1px dashed #fca5a5;">
+                            <span>TOTAL ENTREGA FINAL</span>
+                            <span>${formatearMonto(datosInforme.entregas.totalFinal)}</span>
+                        </div>
+                    `;
+                }
+                
+                // Total entregas
+                html += `
+                    <div class="entregas-total">
+                        <span>TOTAL ENTREGAS</span>
+                        <span>${formatearMonto(datosInforme.entregas.totalEntregas)}</span>
+                    </div>
+                `;
+                
+                html += `</div>`;
+            }
+            
+            // FILA 5: Detalle de egresos
+            html += `
+                <div style="margin-top:6px; font-size:11px; color:#64748b;">
+                    ${datosInforme.egresos.length} tipos de gastos registrados
+                    ${datosInforme.egresos.length > 0 ? ' | ' + datosInforme.egresos.map(e => e.nombre || e.codigo).join(', ') : ''}
+                </div>
+            `;
+            
+            container.innerHTML = html;
+        }
+        
+        // ============================================================
+        // GENERAR TICKET DEL INFORME DIARIO (CON ENTREGAS)
+        // ============================================================
+        function generarTicketInforme() {
+            var ancho = 48;
+            var t = '';
+            var r = datosInforme.recaudo;
+            
+            // ========== ENCABEZADO ==========
+            t += '_'.repeat(ancho) + '\n';
+            t += centerText('INFORME DE CAJA MENOR', ancho) + '\n';
+            t += centerText('SICSa - Sistema de Cobros', ancho) + '\n';
+            t += centerText('FECHA: ' + datosInforme.fecha, ancho) + '\n';
+            t += '_'.repeat(ancho) + '\n';
+            
+            // ========== VENTAS DEL DÍA ==========
+            t += centerText('📊 VENTAS DEL DÍA', ancho) + '\n';
+            t += padRight('  FACTURACIÓN', 28) + padLeft(formatearMonto(datosInforme.ventas.facturacion), 20) + '\n\n';
+            t += padRight('  VENTA PEREIRA', 28) + padLeft(formatearMonto(datosInforme.ventas.pereira), 20) + '\n';
+            t += padRight('  VENTA MANIZALES', 28) + padLeft(formatearMonto(datosInforme.ventas.manizales), 20) + '\n';
+            t += padRight('  VENTA SUPIA', 28) + padLeft(formatearMonto(datosInforme.ventas.supia), 20) + '\n';
+            t += '_'.repeat(ancho) + '\n';
+            t += padRight('  NUMERO DE VENTAS', 28) + padLeft(String(datosInforme.ventas.total), 20) + '\n';
+            t += '_'.repeat(ancho) + '\n\n';
+            
+            // ========== RECAUDO DEL DÍA ==========
+            t += centerText('💰 RECAUDO DEL DÍA', ancho) + '\n';
+            t += padRight('  INGRESO CAJA (ABC)', 28) + padLeft(formatearMonto(r.abc), 20) + '\n';
+            t += padRight('  INGRESOS CARTERA (ARC)', 28) + padLeft(formatearMonto(r.arc), 20) + '\n';
+            t += padRight('  REGISTROS ABC', 28) + padLeft(String(r.registrosABC), 20) + '\n';
+            t += padRight('  REGISTROS ARC', 28) + padLeft(String(r.registrosARC), 20) + '\n';
+            t += '_'.repeat(ancho) + '\n';
+            t += padRight('  TOTAL RECAUDO', 28) + padLeft(formatearMonto(r.total), 20) + '\n';
+            t += '_'.repeat(ancho) + '\n\n';
+            
+            // ========== DESGLOSE POR CIUDAD ==========
+            var tienePereira = r.abcPereira > 0 || r.arcPereira > 0;
+            var tieneSupia = r.abcSupia > 0 || r.arcSupia > 0;
+            var tieneManizales = r.abcManizales > 0 || r.arcManizales > 0;
+            
+            if (tienePereira || tieneSupia || tieneManizales) {
+                t += centerText('🏙️ DESGLOSE POR CIUDAD', ancho) + '\n';
+                t += padRight('CIUDAD', 12) + padRight('ABC', 12) + padRight('ARC', 12) + 'TOTAL\n';
+                t += '_'.repeat(ancho) + '\n';
+                
+                if (tienePereira) {
+                    t += padRight('PEREIRA', 12) + 
+                        padRight(formatearMonto(r.abcPereira), 12) + 
+                        padRight(formatearMonto(r.arcPereira), 12) + 
+                        formatearMonto(r.abcPereira + r.arcPereira) + '\n';
+                }
+                if (tieneSupia) {
+                    t += padRight('SUPIA', 12) + 
+                        padRight(formatearMonto(r.abcSupia), 12) + 
+                        padRight(formatearMonto(r.arcSupia), 12) + 
+                        formatearMonto(r.abcSupia + r.arcSupia) + '\n';
+                }
+                if (tieneManizales) {
+                    t += padRight('MANIZALES', 12) + 
+                        padRight(formatearMonto(r.abcManizales), 12) + 
+                        padRight(formatearMonto(r.arcManizales), 12) + 
+                        formatearMonto(r.abcManizales + r.arcManizales) + '\n';
+                }
+                
+                t += '_'.repeat(ancho) + '\n';
+                t += padRight('TOTAL', 12) + 
+                    padRight(formatearMonto(r.abc), 12) + 
+                    padRight(formatearMonto(r.arc), 12) + 
+                    formatearMonto(r.total) + '\n';
+                t += '_'.repeat(ancho) + '\n\n';
+            }
+            
+            // ========== 🔥 NUEVO: ENTREGAS ==========
+            if (datosInforme.entregas.totalEntregas > 0) {
+                t += centerText('📦 ENTREGAS', ancho) + '\n';
+                t += '_'.repeat(ancho) + '\n';
+                
+                // ENTREGA PARCIAL
+                if (datosInforme.entregas.parcial.length > 0) {
+                    t += '📄 ENTREGA PARCIAL (EP)\n';
+                    t += '─'.repeat(ancho) + '\n';
+                    datosInforme.entregas.parcial.forEach(function(item) {
+                        t += padRight('  ' + item.nombre, 28) + padLeft(formatearMonto(item.monto), 20) + '\n';
+                        item.registros.forEach(function(r) {
+                            t += '    • ' + formatearMonto(r.monto) + (r.descripcion ? ' - ' + r.descripcion : '') + '\n';
+                        });
+                    });
+                    t += '─'.repeat(ancho) + '\n';
+                    t += padRight('  TOTAL PARCIAL', 28) + padLeft(formatearMonto(datosInforme.entregas.totalParcial), 20) + '\n';
+                    t += '\n';
+                }
+                
+                // ENTREGA FINAL
+                if (datosInforme.entregas.final.length > 0) {
+                    t += '📄 ENTREGA FINAL (EF)\n';
+                    t += '─'.repeat(ancho) + '\n';
+                    datosInforme.entregas.final.forEach(function(item) {
+                        t += padRight('  ' + item.nombre, 28) + padLeft(formatearMonto(item.monto), 20) + '\n';
+                        item.registros.forEach(function(r) {
+                            t += '    • ' + formatearMonto(r.monto) + (r.descripcion ? ' - ' + r.descripcion : '') + '\n';
+                        });
+                    });
+                    t += '─'.repeat(ancho) + '\n';
+                    t += padRight('  TOTAL FINAL', 28) + padLeft(formatearMonto(datosInforme.entregas.totalFinal), 20) + '\n';
+                    t += '\n';
+                }
+                
+                t += '_'.repeat(ancho) + '\n';
+                t += padRight('  TOTAL ENTREGAS', 28) + padLeft(formatearMonto(datosInforme.entregas.totalEntregas), 20) + '\n';
+                t += '_'.repeat(ancho) + '\n\n';
+            }
+            
+            // ========== EGRESOS DEL DÍA ==========
+            t += centerText('💸 EGRESOS DEL DÍA', ancho) + '\n';
+            
+            if (datosInforme.egresos.length === 0) {
+                t += padRight('  NO HAY EGRESOS REGISTRADOS', ancho) + '\n';
+            } else {
+                for (var i = 0; i < datosInforme.egresos.length; i++) {
+                    var egreso = datosInforme.egresos[i];
+                    var codigo = egreso.codigo || '';
+                    var nombre = egreso.nombre || 'Sin nombre';
+                    var montoTotal = egreso.montoTotal || 0;
+                    var trabajadores = egreso.trabajadores || [];
+                    
+                    t += '  ' + codigo + ' - ' + nombre + '\n';
+                    t += '  ' + '─'.repeat(ancho - 4) + '\n';
+                    
+                    if (trabajadores.length === 0) {
+                        t += padRight('    SIN TRABAJADOR ASIGNADO', ancho - 2) + '\n';
+                        t += padRight('    Total: ' + formatearMonto(montoTotal), ancho - 2) + '\n';
+                    } else {
+                        for (var j = 0; j < trabajadores.length; j++) {
+                            var trabajador = trabajadores[j];
+                            var nombreTrabajador = trabajador.nombre || 'SIN TRABAJADOR';
+                            var montoTrabajador = trabajador.monto || 0;
+                            var registros = trabajador.registros || [];
+                            var descripcionTrabajador = trabajador.descripcion || '';
+                            
+                            t += padRight('    ' + nombreTrabajador, 28) + padLeft(formatearMonto(montoTrabajador), 20) + '\n';
+                            
+                            if (registros.length > 0) {
+                                for (var k = 0; k < registros.length; k++) {
+                                    var reg = registros[k];
+                                    var montoReg = reg.monto || 0;
+                                    var descReg = reg.descripcion || '';
+                                    
+                                    var detalle = '      • ' + formatearMonto(montoReg);
+                                    if (descReg) {
+                                        detalle += ' - ' + descReg;
+                                    }
+                                    t += padRight(detalle, ancho - 2) + '\n';
+                                }
+                            } else if (descripcionTrabajador) {
+                                t += padRight('      ' + descripcionTrabajador, ancho - 2) + '\n';
+                            }
+                        }
+                    }
+                    
+                    t += '  ' + '_'.repeat(ancho - 4) + '\n';
+                    t += padRight('  TOTAL ' + codigo, 28) + padLeft(formatearMonto(montoTotal), 20) + '\n\n';
+                    t += '\n';
+                }
+            }
+            t += '_'.repeat(ancho) + '\n';
+            t += padRight('  TOTAL EGRESOS', 28) + padLeft(formatearMonto(datosInforme.totalEgresos), 20) + '\n';
+            t += '_'.repeat(ancho) + '\n\n';
+            
+            // ========== TOTAL GENERAL ==========
+            t += centerText('🏦 TOTAL GENERAL', ancho) + '\n';
+            t += padRight('  TOTAL INGRESOS (NETO)', 28) + padLeft(formatearMonto(datosInforme.totalIngresos), 20) + '\n';
+            t += '_'.repeat(ancho) + '\n\n';
+            
+            // ========== FIRMAS ==========
+            t += centerText('FIRMAS DE AUTORIZACIÓN', ancho) + '\n\n\n';
+            t += padRight('     ________________     ________________', ancho) + '\n';
+            t += padRight('FIRMA: QUIEN RECIBE        QUIEN ENTREGA', ancho) + '\n\n';
+            
+            // ========== PIE DE PÁGINA ==========
+            t += '_'.repeat(ancho) + '\n';
+            t += centerText('Este documento es una constancia física del', ancho) + '\n';
+            t += centerText('movimiento realizado. Sirve como soporte', ancho) + '\n';
+            t += '_'.repeat(ancho) + '\n';
+            
+            return t;
+        }
+        
+        // ============================================================
+        // FUNCIONES AUXILIARES
+        // ============================================================
+        function wrapText(texto, maxLen) {
+            if (!texto) return [];
+            var palabras = texto.split(' ');
+            var lineas = [];
+            var lineaActual = '';
+    
+            for (var i = 0; i < palabras.length; i++) {
+                var palabra = palabras[i];
+                if ((lineaActual + ' ' + palabra).length <= maxLen) {
+                    lineaActual += (lineaActual ? ' ' : '') + palabra;
+                } else {
+                    if (lineaActual) lineas.push(lineaActual);
+                    lineaActual = palabra;
+                }
+            }
+            if (lineaActual) lineas.push(lineaActual);
+    
+            return lineas;
+        }
+        
+        function centerText(texto, ancho) {
+            if (texto.length >= ancho) return texto.substring(0, ancho);
+            var espacios = ancho - texto.length;
+            var izquierda = Math.floor(espacios / 2);
+            return ' '.repeat(izquierda) + texto + ' '.repeat(espacios - izquierda);
+        }
+        
+        function padRight(texto, ancho) {
+            var str = String(texto);
+            if (str.length >= ancho) return str.substring(0, ancho);
+            return str + ' '.repeat(ancho - str.length);
+        }
+        
+        function padLeft(texto, ancho) {
+            var str = String(texto);
+            if (str.length >= ancho) return str.substring(0, ancho);
+            return ' '.repeat(ancho - str.length) + str;
+        }
+        
+        function formatearMonto(valor) {
+            var num = parseFloat(valor);
+            if (isNaN(num)) return '$0';
+            return '$' + num.toLocaleString('es-CO', {
+                minimumFractionDigits: 0,
+                maximumFractionDigits: 0
+            });
+        }
+        
+        function escapeHtml(texto) {
+            if (!texto) return '';
+            return texto.replace(/[&<>]/g, function(m) {
+                if (m === '&') return '&amp;';
+                if (m === '<') return '&lt;';
+                if (m === '>') return '&gt;';
+                return m;
+            });
+        }
+        
+        // ============================================================
+        // FUNCIÓN PRINCIPAL: IMPRIMIR CON RAWBT
+        // ============================================================
+        function imprimirConRawBT() {
+            var statusDiv = document.getElementById('status');
+            
+            if (!ticketTexto) {
+                statusDiv.innerHTML = '❌ Error: No hay ticket para imprimir';
+                statusDiv.className = 'status status-error';
+                return;
+            }
+            
+            var ticketCodificado = encodeURIComponent(ticketTexto);
+            var intentUri = 'intent:' + ticketCodificado + '#Intent;scheme=rawbt;package=ru.a402d.rawbtprinter;end;';
+            
+            statusDiv.innerHTML = '📤 Abriendo RawBT...';
+            statusDiv.className = 'status status-info';
+            
+            window.location.href = intentUri;
+            
+            setTimeout(function() {
+                statusDiv.innerHTML = '✅ Ticket enviado a RawBT. La ventana se cerrará en 3 segundos.';
+                statusDiv.className = 'status status-success';
+            }, 4500);
+            
+            setTimeout(function() {
+                window.close();
+            }, 12000);
+        }
+        
+        // ============================================================
+        // COPIAR TICKET AL PORTAPAPELES
+        // ============================================================
+        function copiarTicket() {
+            if (!ticketTexto) {
+                alert('No hay ticket para copiar');
+                return;
+            }
+            
+            navigator.clipboard.writeText(ticketTexto).then(function() {
+                var statusDiv = document.getElementById('status');
+                statusDiv.innerHTML = '✅ Ticket copiado al portapapeles';
+                statusDiv.className = 'status status-success';
+                
+                setTimeout(function() {
+                    statusDiv.innerHTML = '⚪ Listo para imprimir';
+                    statusDiv.className = 'status status-info';
+                }, 2000);
+            }).catch(function() {
+                var statusDiv = document.getElementById('status');
+                statusDiv.innerHTML = '❌ Error al copiar. Copia manualmente.';
+                statusDiv.className = 'status status-error';
+            });
+        }
+        
+        // ============================================================
+        // CERRAR VENTANA
+        // ============================================================
+        function cerrarVentana() {
+            window.close();
+        }
+        
+        // ============================================================
+        // INICIALIZAR TODO CUANDO CARGA LA PÁGINA
+        // ============================================================
+        document.addEventListener('DOMContentLoaded', function() {
+            var hayDatos = leerDatosURL();
+            
+            if (!hayDatos) {
+                document.getElementById('ticketPreview').innerHTML = '⚠️ No hay datos de informe para mostrar';
+                document.getElementById('status').innerHTML = '⚠️ Esperando datos del sistema de cobros...';
+                document.getElementById('status').className = 'status status-warning';
+            }
+            
+            document.getElementById('btnImprimir').onclick = imprimirConRawBT;
+            document.getElementById('btnCopiar').onclick = copiarTicket;
+            document.getElementById('btnCerrar').onclick = cerrarVentana;
+        });
+    </script>
+</body>
+</html>
