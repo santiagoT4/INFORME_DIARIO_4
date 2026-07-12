@@ -859,7 +859,7 @@
             if (tienePereira || tieneSupia || tieneManizales) {
                 t += centerText('🏙️ DESGLOSE POR CIUDAD', ancho) + '\n';
                 t += padRight('CIUDAD', 12) + padRight('ABC', 12) + padRight('ARC', 12) + 'TOTAL\n';
-                t += '_'.repeat(ancho) + '\n';
+                t += '.'.repeat(ancho) + '\n';
                 
                 if (tienePereira) {
                     t += padRight('PEREIRA', 12) + 
@@ -888,45 +888,7 @@
                 t += '_'.repeat(ancho) + '\n\n';
             }
             
-            // ========== 🔥 NUEVO: ENTREGAS ==========
-            if (datosInforme.entregas.totalEntregas > 0) {
-                t += centerText('📦 ENTREGAS', ancho) + '\n';
-                t += '_'.repeat(ancho) + '\n';
-                
-                // ENTREGA PARCIAL
-                if (datosInforme.entregas.parcial.length > 0) {
-                    t += '📄 ENTREGA PARCIAL (EP)\n';
-                    t += '─'.repeat(ancho) + '\n';
-                    datosInforme.entregas.parcial.forEach(function(item) {
-                        t += padRight('  ' + item.nombre, 28) + padLeft(formatearMonto(item.monto), 20) + '\n';
-                        item.registros.forEach(function(r) {
-                            t += '    • ' + formatearMonto(r.monto) + (r.descripcion ? ' - ' + r.descripcion : '') + '\n';
-                        });
-                    });
-                    t += '─'.repeat(ancho) + '\n';
-                    t += padRight('  TOTAL PARCIAL', 28) + padLeft(formatearMonto(datosInforme.entregas.totalParcial), 20) + '\n';
-                    t += '\n';
-                }
-                
-                // ENTREGA FINAL
-                if (datosInforme.entregas.final.length > 0) {
-                    t += '📄 ENTREGA FINAL (EF)\n';
-                    t += '─'.repeat(ancho) + '\n';
-                    datosInforme.entregas.final.forEach(function(item) {
-                        t += padRight('  ' + item.nombre, 28) + padLeft(formatearMonto(item.monto), 20) + '\n';
-                        item.registros.forEach(function(r) {
-                            t += '    • ' + formatearMonto(r.monto) + (r.descripcion ? ' - ' + r.descripcion : '') + '\n';
-                        });
-                    });
-                    t += '─'.repeat(ancho) + '\n';
-                    t += padRight('  TOTAL FINAL', 28) + padLeft(formatearMonto(datosInforme.entregas.totalFinal), 20) + '\n';
-                    t += '\n';
-                }
-                
-                t += '_'.repeat(ancho) + '\n';
-                t += padRight('  TOTAL ENTREGAS', 28) + padLeft(formatearMonto(datosInforme.entregas.totalEntregas), 20) + '\n';
-                t += '_'.repeat(ancho) + '\n\n';
-            }
+            
             
             // ========== EGRESOS DEL DÍA ==========
             t += centerText('💸 EGRESOS DEL DÍA', ancho) + '\n';
@@ -986,6 +948,47 @@
             
             // ========== TOTAL GENERAL ==========
             t += centerText('🏦 TOTAL GENERAL', ancho) + '\n';
+            // ========== 🔥 NUEVO: ENTREGAS ==========
+            if (datosInforme.entregas.totalEntregas > 0) {
+                t += centerText('📦 ENTREGAS', ancho) + '\n';
+                //t += '_'.repeat(ancho) + '\n';
+                
+                // ENTREGA PARCIAL
+                if (datosInforme.entregas.parcial.length > 0) {
+                    t += '📄 ENTREGA PARCIAL (EP)\n';
+                    //t += '─'.repeat(ancho) + '\n';
+                    datosInforme.entregas.parcial.forEach(function(item) {
+                        t += padRight('  ' + item.nombre, 28) + padLeft(formatearMonto(item.monto), 20) + '\n';
+                        item.registros.forEach(function(r) {
+                            t += '    • ' + formatearMonto(r.monto) + (r.descripcion ? ' - ' + r.descripcion : '') + '\n';
+                        });
+                    });
+                    t += '─'.repeat(ancho) + '\n';
+                    t += padRight('  TOTAL PARCIAL', 28) + padLeft(formatearMonto(datosInforme.entregas.totalParcial), 20) + '\n';
+                    t += '\n';
+                }
+                
+                // ENTREGA FINAL
+                if (datosInforme.entregas.final.length > 0) {
+                    t += '📄 ENTREGA FINAL (EF)\n\n';
+                    //t += '─'.repeat(ancho) + '\n';
+                    datosInforme.entregas.final.forEach(function(item) {
+                        t += padRight('  ' + item.nombre, 28) + padLeft(formatearMonto(item.monto), 20) + '\n';
+                        item.registros.forEach(function(r) {
+                            t += '    • ' + formatearMonto(r.monto) + (r.descripcion ? ' - ' + r.descripcion : '') + '\n';
+                        });
+                    });
+                    //t += '─'.repeat(ancho) + '\n';
+                    //t += padRight('  TOTAL FINAL', 28) + padLeft(formatearMonto(datosInforme.entregas.totalFinal), 20) + '\n';
+                    //t += '\n';
+                }
+                
+                t += '_'.repeat(ancho) + '\n';
+                t += padRight('  TOTAL ENTREGAS', 28) + padLeft(formatearMonto(datosInforme.entregas.totalEntregas), 20) + '\n';
+                t += '_'.repeat(ancho) + '\n\n';
+            }
+
+            
             t += padRight('  TOTAL INGRESOS (NETO)', 28) + padLeft(formatearMonto(datosInforme.totalIngresos), 20) + '\n';
             t += '_'.repeat(ancho) + '\n\n';
             
