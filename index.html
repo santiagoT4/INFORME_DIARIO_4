@@ -837,9 +837,9 @@
             t += padRight('  VENTA PEREIRA', 28) + padLeft(formatearMonto(datosInforme.ventas.pereira), 20) + '\n';
             t += padRight('  VENTA MANIZALES', 28) + padLeft(formatearMonto(datosInforme.ventas.manizales), 20) + '\n';
             t += padRight('  VENTA SUPIA', 28) + padLeft(formatearMonto(datosInforme.ventas.supia), 20) + '\n';
-            t += '_'.repeat(ancho) + '\n';
+            t += '.'.repeat(ancho) + '\n';
             t += padRight('  NUMERO DE VENTAS', 28) + padLeft(String(datosInforme.ventas.total), 20) + '\n';
-            t += '.'.repeat(ancho) + '\n\n';
+            t += '_'.repeat(ancho) + '\n\n';
             
             // ========== RECAUDO DEL DÍA ==========
             t += centerText('💰 RECAUDO DEL DÍA', ancho) + '\n';
@@ -994,10 +994,10 @@
             t += '_'.repeat(ancho) + '\n\n';
             
             // ========== FIRMAS ==========
-            t += centerText('FIRMAS DE AUTORIZACIÓN', ancho) + '\n\n\n';
-            t += padRight('     ________________     ________________', ancho) + '\n';
-            t += padRight('FIRMA: QUIEN RECIBE        QUIEN ENTREGA', ancho) + '\n\n';
-            
+            t += centerText('FIRMAS DE AUTORIZACIÓN', ancho) + '\n\n\n\n';
+            t += padRight('     ________________     _________________', ancho) + '\n';
+            t += padRight('FIRMA: QUIEN RECIBE         QUIEN ENTREGA', ancho) + '\n\n';
+             
             // ========== PIE DE PÁGINA ==========
             t += '_'.repeat(ancho) + '\n';
             t += centerText('Este documento es una constancia física del', ancho) + '\n';
