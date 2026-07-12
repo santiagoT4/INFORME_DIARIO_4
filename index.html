@@ -676,7 +676,7 @@
         }
         
         // ============================================================
-        // MOSTRAR RESUMEN DEL INFORME (CON ENTREGAS)
+        // MOSTRAR RESUMEN DEL INFORME 
         // ============================================================
         function mostrarResumen() {
             var container = document.getElementById('infoResumen');
@@ -715,7 +715,7 @@
                 </div>
             `;
             
-            // 🔥 NUEVO: FILA DE ENTREGAS (justo arriba de facturación y cobros)
+            // 🔥 SOLO UNA LÍNEA DE ENTREGAS (SIN DETALLE)
             if (tieneEntregas) {
                 html += `
                     <div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:6px; margin-top:4px; padding:4px 8px; background:#fefce8; border-radius:8px; border:1px solid #fde68a;">
@@ -803,80 +803,6 @@
                     </table>
                 </div>
                 `;
-            }
-            
-            // ===== 🔥 NUEVO: DETALLE DE ENTREGAS =====
-            if (tieneEntregas) {
-                html += `
-                    <div style="margin-top:8px; padding-top:6px; border-top:1px solid #e2e8f0;">
-                        <div style="font-size:11px; font-weight:700; color:#1e293b; margin-bottom:4px;">📦 DETALLE DE ENTREGAS</div>
-                `;
-                
-                // ENTREGA PARCIAL
-                if (datosInforme.entregas.parcial.length > 0) {
-                    html += `
-                        <div style="font-size:11px; font-weight:600; color:#0d6efd; margin:4px 0 2px 0;">📄 ENTREGA PARCIAL (EP)</div>
-                    `;
-                    datosInforme.entregas.parcial.forEach(function(item) {
-                        html += `
-                            <div class="entregas-item">
-                                <div>
-                                    <span class="nombre">${escapeHtml(item.nombre)}</span>
-                                    <div class="detalle">
-                                        ${item.registros.map(function(r) {
-                                            return '💰 ' + formatearMonto(r.monto) + (r.descripcion ? ' - ' + escapeHtml(r.descripcion) : '');
-                                        }).join(' | ')}
-                                    </div>
-                                </div>
-                                <span class="monto parcial">${formatearMonto(item.monto)}</span>
-                            </div>
-                        `;
-                    });
-                    html += `
-                        <div style="display:flex; justify-content:space-between; font-size:11px; font-weight:600; color:#0d6efd; padding:2px 0; border-top:1px dashed #93c5fd;">
-                            <span>TOTAL ENTREGA PARCIAL</span>
-                            <span>${formatearMonto(datosInforme.entregas.totalParcial)}</span>
-                        </div>
-                    `;
-                }
-                
-                // ENTREGA FINAL
-                if (datosInforme.entregas.final.length > 0) {
-                    html += `
-                        <div style="font-size:11px; font-weight:600; color:#dc3545; margin:6px 0 2px 0;">📄 ENTREGA FINAL (EF)</div>
-                    `;
-                    datosInforme.entregas.final.forEach(function(item) {
-                        html += `
-                            <div class="entregas-item">
-                                <div>
-                                    <span class="nombre">${escapeHtml(item.nombre)}</span>
-                                    <div class="detalle">
-                                        ${item.registros.map(function(r) {
-                                            return '💰 ' + formatearMonto(r.monto) + (r.descripcion ? ' - ' + escapeHtml(r.descripcion) : '');
-                                        }).join(' | ')}
-                                    </div>
-                                </div>
-                                <span class="monto final">${formatearMonto(item.monto)}</span>
-                            </div>
-                        `;
-                    });
-                    html += `
-                        <div style="display:flex; justify-content:space-between; font-size:11px; font-weight:600; color:#dc3545; padding:2px 0; border-top:1px dashed #fca5a5;">
-                            <span>TOTAL ENTREGA FINAL</span>
-                            <span>${formatearMonto(datosInforme.entregas.totalFinal)}</span>
-                        </div>
-                    `;
-                }
-                
-                // Total entregas
-                html += `
-                    <div class="entregas-total">
-                        <span>TOTAL ENTREGAS</span>
-                        <span>${formatearMonto(datosInforme.entregas.totalEntregas)}</span>
-                    </div>
-                `;
-                
-                html += `</div>`;
             }
             
             // FILA 5: Detalle de egresos
