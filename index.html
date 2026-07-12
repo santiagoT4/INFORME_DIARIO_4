@@ -825,9 +825,7 @@
             var r = datosInforme.recaudo;
             
             // ========== ENCABEZADO ==========
-            //t += '_'.repeat(ancho) + '\n';
             t += centerText('INFORME DE CAJA MENOR - SICSa', ancho) + '\n';
-            //t += centerText('SICSa - Sistema de Cobros', ancho) + '\n';
             t += centerText('FECHA: ' + datosInforme.fecha, ancho) + '\n';
             t += '_'.repeat(ancho) + '\n';
             
@@ -839,18 +837,17 @@
             t += padRight('  VENTA SUPIA', 28) + padLeft(formatearMonto(datosInforme.ventas.supia), 20) + '\n';
             t += '.'.repeat(ancho) + '\n';
             t += padRight('  NUMERO DE VENTAS', 28) + padLeft(String(datosInforme.ventas.total), 20) + '\n';
-            t += '_'.repeat(ancho) + '\n\n';
-            
+            t += '_'.repeat(ancho) + '\n';
             // ========== RECAUDO DEL DÍA ==========
             t += centerText('💰 RECAUDO DEL DÍA', ancho) + '\n';
+            t += '\n';
             t += padRight('  INGRESO CAJA (ABC)', 28) + padLeft(formatearMonto(r.abc), 20) + '\n';
             t += padRight('  INGRESOS CARTERA (ARC)', 28) + padLeft(formatearMonto(r.arc), 20) + '\n';
             //t += padRight('  REGISTROS ABC', 28) + padLeft(String(r.registrosABC), 20) + '\n';
             //t += padRight('  REGISTROS ARC', 28) + padLeft(String(r.registrosARC), 20) + '\n';
             t += '.'.repeat(ancho) + '\n';
             t += padRight('  TOTAL RECAUDO', 28) + padLeft(formatearMonto(r.total), 20) + '\n';
-            t += '_'.repeat(ancho) + '\n\n';
-            
+            //t += '_'.repeat(ancho) + '\n\n';
             // ========== DESGLOSE POR CIUDAD ==========
             var tienePereira = r.abcPereira > 0 || r.arcPereira > 0;
             var tieneSupia = r.abcSupia > 0 || r.arcSupia > 0;
@@ -858,6 +855,7 @@
             
             if (tienePereira || tieneSupia || tieneManizales) {
                 t += centerText('🏙️ RECAUDO POR RUTA', ancho) + '\n';
+                t += '\n';
                 t += padRight('CIUDAD', 11) + padRight('CAJA (ABC)', 12) + padRight('CARTERA (ARC)', 15) + 'TOTAL\n';
                 t += '.'.repeat(ancho) + '\n';
                 
@@ -938,7 +936,7 @@
                     }
                     
                     t += '  ' + '_'.repeat(ancho - 4) + '\n';
-                    t += padRight('  TOTAL ' + codigo, 28) + padLeft(formatearMonto(montoTotal), 20) + '\n\n';
+                    t += padRight('  TOTAL ' + codigo, 28) + padLeft(formatearMonto(montoTotal), 20) + '\n';
                     t += '\n';
                 }
             }
