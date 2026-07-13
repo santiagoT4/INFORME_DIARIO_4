@@ -826,7 +826,7 @@
             
             // ========== ENCABEZADO ==========
             t += '_'.repeat(ancho) + '\n';
-            t += centerText('INFORME DE CAJA MENOR (SICSa)', ancho);
+            t += centerText('INFORME DE CAJA MENOR (SICSa)', ancho) + '\n';
             t += centerText('FECHA: ' + datosInforme.fecha, ancho) + '\n';
             t += '_'.repeat(ancho) + '\n';
             
@@ -903,7 +903,7 @@
                     var trabajadores = egreso.trabajadores || [];
                     
                     t += '  ' + codigo + ' - ' + nombre + '\n';
-                    t += '  ' + '─'.repeat(ancho - 4) + '\n';
+                    t += '  ' + '.'.repeat(ancho - 4) + '\n';
                     
                     if (trabajadores.length === 0) {
                         t += padRight('    SIN TRABAJADOR ASIGNADO', ancho - 2) + '\n';
@@ -936,7 +936,7 @@
                         }
                     }
                     
-                    t += '  ' + '_'.repeat(ancho - 4) + '\n';
+                    t += '  ' + '.'.repeat(ancho - 4) + '\n';
                     t += padRight('  TOTAL ' + codigo, 28) + padLeft(formatearMonto(montoTotal), 20) + '\n';
                     t += '\n';
                 }
@@ -963,14 +963,14 @@
                         });
                     });
                     //t += '─'.repeat(ancho) + '\n';
-                    t += '.'.repeat(ancho) + '\n';
+                    t += '  ' + '.'.repeat(ancho - 4) + '\n';
                     t += padRight('  TOTAL PARCIAL', 28) + padLeft(formatearMonto(datosInforme.entregas.totalParcial), 20) + '\n';
                     t += '\n';
                 }
                 
                 // ENTREGA FINAL
                 if (datosInforme.entregas.final.length > 0) {
-                    t += '📄 ENTREGA FINAL (EF)\n\n';
+                    t += '📄 ENTREGA RUTA FINAL (EF)\n\n';
                     //t += '─'.repeat(ancho) + '\n';
                     datosInforme.entregas.final.forEach(function(item) {
                         t += padRight('  ' + item.nombre, 28) + padLeft(formatearMonto(item.monto), 20) + '\n';
@@ -978,7 +978,7 @@
                             t += '    • ' + formatearMonto(r.monto) + (r.descripcion ? ' - ' + r.descripcion : '') + '\n';
                         });
                     });
-                    t += '.'.repeat(ancho) + '\n';
+                    t += '  ' + '.'.repeat(ancho - 4) + '\n';
                     t += padRight('  TOTAL RUTA FINAL', 28) + padLeft(formatearMonto(datosInforme.entregas.totalFinal), 20) + '\n';
                     //t += '\n';
                 }
