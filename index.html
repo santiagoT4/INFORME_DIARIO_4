@@ -831,7 +831,7 @@
             t += '_'.repeat(ancho) + '\n';
             
             // ========== VENTAS DEL DÍA ==========
-            t += centerText('📊 VENTAS DEL DÍA', ancho) + '\n';
+            t += centerText('📊 VENTAS DEL DIA', ancho) + '\n';
             t += padRight('  FACTURACIÓN', 28) + padLeft(formatearMonto(datosInforme.ventas.facturacion), 20) + '\n\n';
             t += padRight('  VENTA PEREIRA', 28) + padLeft(formatearMonto(datosInforme.ventas.pereira), 20) + '\n';
             t += padRight('  VENTA MANIZALES', 28) + padLeft(formatearMonto(datosInforme.ventas.manizales), 20) + '\n';
@@ -840,7 +840,7 @@
             t += padRight('  NUMERO DE VENTAS', 28) + padLeft(String(datosInforme.ventas.total), 20) + '\n';
             t += '='.repeat(ancho) + '\n';
             // ========== RECAUDO DEL DÍA ==========
-            t += centerText('💰 RECAUDO DEL DÍA', ancho) + '\n';
+            t += centerText('💰 RECAUDO DEL DIA', ancho) + '\n';
             t += '\n';
             t += padRight('  INGRESO CAJA (ABC)', 28) + padLeft(formatearMonto(r.abc), 20) + '\n';
             t += padRight('  INGRESOS CARTERA (ARC)', 28) + padLeft(formatearMonto(r.arc), 20) + '\n';
@@ -884,13 +884,13 @@
                     padRight(formatearMonto(r.abc), 12) + 
                     padRight(formatearMonto(r.arc), 12) + 
                     formatearMonto(r.total) + '\n';
-                t += '_'.repeat(ancho) + '\n';
+                t += '='.repeat(ancho) + '\n';
             }
             
             
             
             // ========== EGRESOS DEL DÍA ==========
-            t += centerText('💸 EGRESOS DEL DÍA', ancho) + '\n';
+            t += centerText('💸 EGRESOS DEL DIA', ancho) + '\n';
             
             if (datosInforme.egresos.length === 0) {
                 t += padRight('  NO HAY EGRESOS REGISTRADOS', ancho) + '\n';
@@ -943,7 +943,7 @@
             }
             t += '.'.repeat(ancho) + '\n';
             t += padRight('  TOTAL EGRESOS', 28) + padLeft(formatearMonto(datosInforme.totalEgresos), 20) + '\n';
-            t += '_'.repeat(ancho) + '\n';
+            t += '='.repeat(ancho) + '\n';
             
             // ========== TOTAL GENERAL ==========
             t += centerText('🏦 TOTAL GENERAL', ancho) + '\n\n';
@@ -985,12 +985,12 @@
                 
                 //t += '.'.repeat(ancho) + '\n';
                 //t += padRight('  TOTAL ENTREGAS', 28) + padLeft(formatearMonto(datosInforme.entregas.totalEntregas), 20) + '\n';
-                t += '_'.repeat(ancho) + '\n';
+                t += '='.repeat(ancho) + '\n';
             }
 
             
             t += padRight('  TOTAL INGRESOS (NETO)', 28) + padLeft(formatearMonto(datosInforme.totalIngresos), 20) + '\n';
-            t += '_'.repeat(ancho) + '\n';
+            t += '='.repeat(ancho) + '\n';
             
             // ========== FIRMAS ==========
             //t += centerText('FIRMAS DE AUTORIZACIÓN', ancho) + '\n\n\n\n';
