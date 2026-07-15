@@ -825,10 +825,10 @@
             var r = datosInforme.recaudo;
             
             // ========== ENCABEZADO ==========
-            t += '_'.repeat(ancho) + '\n';
+            t += '~'.repeat(ancho) + '\n';
             t += centerText('INFORME DE CAJA MENOR (SICSa)', ancho) + '\n';
             t += centerText('FECHA: ' + datosInforme.fecha, ancho) + '\n';
-            t += '_'.repeat(ancho) + '\n';
+            t += '='.repeat(ancho) + '\n';
             
             // ========== VENTAS DEL DÍA ==========
             t += centerText('📊 VENTAS DEL DIA', ancho) + '\n';
@@ -840,14 +840,14 @@
             t += padRight('  NUMERO DE VENTAS', 28) + padLeft(String(datosInforme.ventas.total), 20) + '\n';
             t += '='.repeat(ancho) + '\n';
             // ========== RECAUDO DEL DÍA ==========
-            t += centerText('💰 RECAUDO DEL DIA', ancho) + '\n';
-            t += '\n';
-            t += padRight('  INGRESO CAJA (ABC)', 28) + padLeft(formatearMonto(r.abc), 20) + '\n';
-            t += padRight('  INGRESOS CARTERA (ARC)', 28) + padLeft(formatearMonto(r.arc), 20) + '\n';
+            //t += centerText('💰 RECAUDO DEL DIA', ancho) + '\n';
+            //t += '\n';
+            //t += padRight('  INGRESO CAJA (ABC)', 28) + padLeft(formatearMonto(r.abc), 20) + '\n';
+            //t += padRight('  INGRESOS CARTERA (ARC)', 28) + padLeft(formatearMonto(r.arc), 20) + '\n';
             //t += padRight('  REGISTROS ABC', 28) + padLeft(String(r.registrosABC), 20) + '\n';
             //t += padRight('  REGISTROS ARC', 28) + padLeft(String(r.registrosARC), 20) + '\n';
-            t += '.'.repeat(ancho) + '\n';
-            t += padRight('  TOTAL RECAUDO', 28) + padLeft(formatearMonto(r.total), 20) + '\n';
+            //t += '.'.repeat(ancho) + '\n';
+            //t += padRight('  TOTAL RECAUDO', 28) + padLeft(formatearMonto(r.total), 20) + '\n';
             //t += '_'.repeat(ancho) + '\n\n';
             // ========== DESGLOSE POR CIUDAD ==========
             var tienePereira = r.abcPereira > 0 || r.arcPereira > 0;
@@ -887,11 +887,8 @@
                 t += '='.repeat(ancho) + '\n';
             }
             
-            
-            
             // ========== EGRESOS DEL DÍA ==========
             t += centerText('💸 EGRESOS DEL DIA', ancho) + '\n';
-            
             if (datosInforme.egresos.length === 0) {
                 t += padRight('  NO HAY EGRESOS REGISTRADOS', ancho) + '\n';
             } else {
@@ -946,7 +943,7 @@
             t += '='.repeat(ancho) + '\n';
             
             // ========== TOTAL GENERAL ==========
-            t += centerText('🏦 TOTAL GENERAL', ancho) + '\n\n';
+            t += centerText('🏦 TOTAL GENERAL DE ENTREGAS', ancho) + '\n\n';
             // ========== 🔥 NUEVO: ENTREGAS ==========
             if (datosInforme.entregas.totalEntregas > 0) {
                 //t += centerText('📦 ENTREGAS', ancho) + '\n';
@@ -970,7 +967,7 @@
                 
                 // ENTREGA FINAL
                 if (datosInforme.entregas.final.length > 0) {
-                    t += '📄 ENTREGA RUTA FINAL (EF)\n\n';
+                    t += '📄 ENTREGA RUTA FINAL (EF)\n';
                     //t += '─'.repeat(ancho) + '\n';
                     datosInforme.entregas.final.forEach(function(item) {
                         t += padRight('  ' + item.nombre, 28) + padLeft(formatearMonto(item.monto), 20) + '\n';
@@ -999,9 +996,9 @@
              
             // ========== PIE DE PÁGINA ==========
             //t += '_'.repeat(ancho) + '\n';
-            t += centerText('Este documento es una constancia física del', ancho) + '\n';
-            t += centerText('movimiento realizado. Sirve como soporte', ancho) + '\n';
-            t += '_'.repeat(ancho) + '\n';
+            //t += centerText('Este documento es una constancia física del', ancho) + '\n';
+            //t += centerText('movimiento realizado. Sirve como soporte', ancho) + '\n';
+            //t += '_'.repeat(ancho) + '\n';
             
             return t;
         }
