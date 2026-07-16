@@ -985,10 +985,12 @@
                 t += '='.repeat(ancho) + '\n';
             }
 
-            
+            var diferencial = datosInforme.totalIngresos - datosInforme.entregas.totalEntregas;
             t += padRight('  TOTAL INGRESOS (NETO)', 28) + padLeft(formatearMonto(datosInforme.totalIngresos), 20) + '\n';
             t += '='.repeat(ancho) + '\n';
-            
+
+            t += padRight('  DIFERENCIAL', 28) + padLeft(formatearMonto(diferencial), 20) + '\n';
+            t += '_'.repeat(ancho) + '\n';
             // ========== FIRMAS ==========
             //t += centerText('FIRMAS DE AUTORIZACIÓN', ancho) + '\n\n\n\n';
             //t += padRight('     ________________     _________________', ancho) + '\n';
